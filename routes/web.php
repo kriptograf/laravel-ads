@@ -48,6 +48,9 @@ Route::group([
     Route::post('/advert/update/{advert}', 'AdvertController@update')->name('advert.update');
     Route::get('/advert/show/{advert}', 'AdvertController@show')->name('advert.show');
     Route::get('/advert/destroy/{advert}', 'AdvertController@destroy')->name('advert.destroy');
+    Route::get('/advert/category', 'AdvertController@category')->name('advert.category');
+    Route::get('/advert/region/{category}/{region?}', 'AdvertController@region')->name('advert.region');
+    Route::get('/advert/create/{category}/{region?}', 'AdvertController@create')->name('advert.create');
 });
 
 /*

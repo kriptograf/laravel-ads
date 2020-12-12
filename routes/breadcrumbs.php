@@ -182,7 +182,18 @@ Breadcrumbs::for('cabinet.account.phone', function ($trail) {
     $trail->push('Home', route('home'));
     $trail->push('Phone verify', route('cabinet.account.phone'));
 });
+
+// -- Объявления пользователя в личном кабинете
 Breadcrumbs::for('cabinet.advert', function ($trail) {
     $trail->push('Home', route('home'));
     $trail->push('Adverts', route('cabinet.advert'));
+});
+Breadcrumbs::for('cabinet.advert.category', function ($trail) {
+    $trail->push('Home', route('home'));
+    $trail->push('Select category', route('cabinet.advert.category'));
+});
+Breadcrumbs::for('cabinet.advert.region', function ($trail, \App\Models\Category $category) {
+    $trail->push('Home', route('home'));
+    $trail->push('Select category', route('cabinet.advert.category'));
+    $trail->push('Select region', route('cabinet.advert.region', $category));
 });

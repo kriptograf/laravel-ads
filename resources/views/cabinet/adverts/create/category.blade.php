@@ -4,9 +4,10 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">{{ __('Adverts') }}</div>
+                <div class="card-header">{{ __('Create Advert') }}</div>
                 <div class="card-body">
-                    <a href="{{ route('cabinet.advert.category') }}" class="btn btn-primary">{{ __('Create advert') }}</a>
+                    <h3>{{ __('Select category') }}</h3>
+                    @include('cabinet.adverts.create.partial._categories', ['categories' => $categories])
                 </div>
             </div>
         </div>
