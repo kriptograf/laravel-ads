@@ -56,7 +56,8 @@ class Category extends Model
     /**
      * Все атрибуты категории включая родительские
      *
-     * @return array
+     * @return \App\Models\Attribute[]
+     *
      * @author Виталий Москвин <foreach@mail.ru>
      */
     public function getAllAttributes()

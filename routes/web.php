@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 Auth::routes(['verify' => true]);
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/adverts', [App\Http\Controllers\AdvertsController::class, 'index'])->name('adverts.index');
 
 Route::get('/ajax/regions', [\App\Http\Controllers\Ajax\RegionController::class, 'get'])->name('ajax.regions');
 
@@ -51,6 +52,7 @@ Route::group([
     Route::get('/advert/category', 'AdvertController@category')->name('advert.category');
     Route::get('/advert/region/{category}/{region?}', 'AdvertController@region')->name('advert.region');
     Route::get('/advert/create/{category}/{region?}', 'AdvertController@create')->name('advert.create');
+    Route::post('/advert/store/{category}/{region}', 'AdvertController@store')->name('advert.store');
 });
 
 /*

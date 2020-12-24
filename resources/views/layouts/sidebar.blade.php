@@ -17,8 +17,6 @@
 
         @include('layouts.partials.nav')
 
-
-
         <main class="py-4">
             <div class="container">
                 {{ Breadcrumbs::view('breadcrumbs::bootstrap4') }}
@@ -28,6 +26,7 @@
                         @include('layouts.partials.cabinet.menu')
                     </div>
                     <div class="col-md-9">
+                        @include('layouts.partials.flash')
                         @yield('content')
                     </div>
                 </div>

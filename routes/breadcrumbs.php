@@ -197,3 +197,14 @@ Breadcrumbs::for('cabinet.advert.region', function ($trail, \App\Models\Category
     $trail->push('Select category', route('cabinet.advert.category'));
     $trail->push('Select region', route('cabinet.advert.region', $category));
 });
+Breadcrumbs::for('cabinet.advert.create', function ($trail, \App\Models\Category $category, \App\Models\Region $region) {
+    $trail->push('Home', route('home'));
+    $trail->push('Select category', route('cabinet.advert.category'));
+    $trail->push('Select region', route('cabinet.advert.region', $category));
+    $trail->push('Add Advert', route('cabinet.advert.create', [$category, $region]));
+});
+Breadcrumbs::for('cabinet.advert.show', function ($trail, \App\Models\Advert $advert) {
+    $trail->push('Home', route('home'));
+    $trail->push('Title Here', route('cabinet.advert.show', $advert));
+});
+
