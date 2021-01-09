@@ -17,9 +17,19 @@ use Illuminate\Support\Facades\Auth;
 Auth::routes(['verify' => true]);
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/adverts', [App\Http\Controllers\AdvertsController::class, 'index'])->name('adverts.index');
 
 Route::get('/ajax/regions', [\App\Http\Controllers\Ajax\RegionController::class, 'get'])->name('ajax.regions');
+
+Route::group([
+    'prefix'     => 'advert',
+    'as'         => 'adverts.',
+], function () {
+    Route::get('/show/{advert}', [App\Http\Controllers\AdvertsController::class, 'show'])->name('show');
+    Route::post('/phone/{advert}', [App\Http\Controllers\AdvertsController::class, 'phone'])->name('phone');
+
+    Route::get('/all/{category?}', [App\Http\Controllers\AdvertsController::class, 'index'])->name('index.all');
+    Route::get('/{region?}/{category?}', [App\Http\Controllers\AdvertsController::class, 'index'])->name('index');
+});
 
 /*
  * Cabinet routes
@@ -48,7 +58,10 @@ Route::group([
     Route::get('/advert/edit/{advert}', 'AdvertController@edit')->name('advert.edit');
     Route::post('/advert/update/{advert}', 'AdvertController@update')->name('advert.update');
     Route::get('/advert/show/{advert}', 'AdvertController@show')->name('advert.show');
-    Route::get('/advert/destroy/{advert}', 'AdvertController@destroy')->name('advert.destroy');
+    Route::get('/advert/photos/{advert}', 'ManageAdvertsController@photos')->name('advert.photos');
+    Route::post('/advert/publish/{advert}', 'AdvertController@publish')->name('advert.publish');
+    Route::post('/advert/close/{advert}', 'AdvertController@close')->name('advert.close');
+    Route::delete('/advert/destroy/{advert}', 'ManageAdvertsController@destroy')->name('advert.destroy');
     Route::get('/advert/category', 'AdvertController@category')->name('advert.category');
     Route::get('/advert/region/{category}/{region?}', 'AdvertController@region')->name('advert.region');
     Route::get('/advert/create/{category}/{region?}', 'AdvertController@create')->name('advert.create');
@@ -91,5 +104,13 @@ Route::group(
         Route::get('/attribute/edit/{category}/{attribute}', [\App\Http\Controllers\Admin\AttributeController::class, 'edit'])->name('attribute.edit');
         Route::post('/attribute/update/{category}/{attribute}', [\App\Http\Controllers\Admin\AttributeController::class, 'update'])->name('attribute.update');
         Route::post('/attribute/destroy/{category}/{attribute}', [\App\Http\Controllers\Admin\AttributeController::class, 'destroy'])->name('attribute.destroy');
+
+        Route::get('/advert/photos/{advert}', 'ManageAdvertsController@photos')->name('advert.photos');
+        Route::post('/advert/publish/{advert}', 'ManageAdvertsController@publish')->name('advert.publish');
+        Route::post('/advert/close/{advert}', 'ManageAdvertsController@close')->name('advert.close');
+        Route::delete('/advert/destroy/{advert}', 'ManageAdvertsController@destroy')->name('advert.destroy');
+        Route::get('/advert/edit/{advert}', 'ManageAdvertsController@edit')->name('advert.edit');
+        Route::get('/advert/reject/{advert}', 'ManageAdvertsController@reject')->name('advert.reject');
+        Route::post('/advert/update/{advert}', 'ManageAdvertsController@update')->name('advert.update');
     }
 );

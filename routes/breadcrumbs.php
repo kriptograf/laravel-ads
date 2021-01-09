@@ -29,6 +29,44 @@ Breadcrumbs::for('verification.notice', function ($trail) {
 });
 
 /**
+ * ************************ Adverts  *************************
+ */
+Breadcrumbs::for('adverts.inner_region', function ($trail, \App\Models\Region $region = null, \App\Models\Category $category = null) {
+    if ($region && $parent = $region->parent) {
+        $trail->parent('adverts.inner_region', $parent, $category);
+    } else {
+        $trail->parent('home');
+        $trail->push('Adverts', route('adverts.index'));
+    }
+    if ($region) {
+        $trail->push($region->name, route('adverts.index', $region, $category));
+    }
+});
+Breadcrumbs::for('adverts.inner_category', function ($trail, \App\Models\Region $region = null, \App\Models\Category $category = null) {
+    if ($category && $parent = $category->parent) {
+        $trail->parent('adverts.inner_category', $region, $parent);
+    } else {
+        $trail->parent('adverts.inner_region', $region, $category);
+    }
+    if ($category) {
+        $trail->push($category->name, route('adverts.index', $region, $category));
+    }
+});
+
+Breadcrumbs::for('adverts.index', function ($trail, \App\Models\Region $region = null, \App\Models\Category $category = null) {
+    $trail->parent('adverts.inner_category', $region, $category);
+    //$trail->push('Adverts', route('adverts.index'));
+});
+Breadcrumbs::for('adverts.index.all', function ($trail, \App\Models\Category $category = null, \App\Models\Region $region = null) {
+    $trail->parent('adverts.index', $region, $category);
+    $trail->push($category->name, route('adverts.index.all'));
+});
+Breadcrumbs::for('adverts.show', function ($trail, \App\Models\Advert $advert) {
+    $trail->parent('adverts.index', $advert->region, $advert->category);
+    $trail->push($advert->title, route('adverts.show', $advert));
+});
+
+/**
  * ************************* Admin ************************
  */
 Breadcrumbs::for('admin.home', function ($trail) {
@@ -149,7 +187,9 @@ Breadcrumbs::for('admin.attribute.show', function ($trail, \App\Models\Category 
     $trail->push($attribute->name, route('admin.attribute.show', [$category, $attribute]));
 });
 
-// -- Личный кабинет пользователя
+/**
+ * Личный кабинет пользователя
+ */
 Breadcrumbs::for('cabinet.home', function ($trail) {
     $trail->push('Home', route('home'));
     $trail->push('Cabinet', route('cabinet.home'));

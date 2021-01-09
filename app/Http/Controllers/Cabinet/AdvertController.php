@@ -5,12 +5,11 @@ namespace App\Http\Controllers\Cabinet;
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\FilledProfile;
 use App\Http\Requests\Cabinet\Advert\CreateRequest;
-use App\Http\Requests\Cabinet\Profile\UpdateRequest;
 use App\Models\Advert;
 use App\Models\Category;
-use App\Models\Profile;
 use App\Models\Region;
 use App\Services\Advert\AdvertService;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 /**
@@ -31,11 +30,14 @@ class AdvertController extends Controller
 
     /**
      * Список всех объявлений пользователя
+     *
      * @author Виталий Москвин <foreach@mail.ru>
      */
     public function index()
     {
-        return view('cabinet.adverts.index');
+        $adverts = Advert::forUser(Auth::user())->orderByDesc('id')->paginate(20);
+
+        return view('cabinet.adverts.index', ['adverts' => $adverts]);
     }
 
     /**
@@ -125,17 +127,46 @@ class AdvertController extends Controller
         return view('cabinet.adverts.show', ['advert' => $advert]);
     }
 
+    /**
+     * Публикация объявления
+     *
+     * @param Advert $advert
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Throwable
+     * @author Виталий Москвин <foreach@mail.ru>
+     */
+    public function publish(Advert $advert)
+    {
+        try{
+            $advert->published_at = Carbon::now();
+            $advert->status = Advert::STATUS_ACTIVE;
+            $advert->saveOrFail();
+        }catch(\DomainException $e){
+            return back()->with('error', $e->getMessage());
+        }
+
+        return redirect()->route('cabinet.advert.show', $advert)->with('success', __('Ads success published!'));
+    }
+
+    public function close(Advert $advert)
+    {
+        try{
+            $advert->status = Advert::STATUS_CLOSED;
+            $advert->saveOrFail();
+        }catch(\DomainException $e){
+            return back()->with('error', $e->getMessage());
+        }
+
+        return redirect()->route('cabinet.advert.show', $advert)->with('success', __('Ads success unpublished!'));
+    }
+
     public function edit()
     {
         return view('cabinet.adverts.edit');
     }
 
     public function update()
-    {
-        return redirect()->route('cabinet.advert');
-    }
-
-    public function destroy()
     {
         return redirect()->route('cabinet.advert');
     }
