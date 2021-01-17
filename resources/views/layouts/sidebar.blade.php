@@ -26,7 +26,6 @@
                         @include('layouts.partials.cabinet.menu')
                     </div>
                     <div class="col-md-9">
-                        @include('layouts.partials.flash')
                         @yield('content')
                     </div>
                 </div>

@@ -55,6 +55,16 @@ class Advert extends Model
         'expires_at' => 'datetime',
     ];
 
+    public static function statusList()
+    {
+        return [
+            static::STATUS_DRAFT => 'draft',
+            static::STATUS_MODERATION => 'moderation',
+            static::STATUS_ACTIVE => 'active',
+            static::STATUS_CLOSED => 'closed',
+        ];
+    }
+
     /**
      * Черновик
      * @return bool
@@ -132,7 +142,7 @@ class Advert extends Model
     }
 
     /**
-     * Отказать в поубликации объявления и указать причину отказа
+     * Отказать в публикации объявления и указать причину отказа
      *
      * @param string $reason
      *
@@ -217,7 +227,7 @@ class Advert extends Model
      */
     public function scopeForCategory(Builder $query, Category $category)
     {
-        return $query->where('category_id', array_merge(
+        return $query->whereIn('category_id', array_merge(
             [$category->id],
             $category->descendants()->pluck('id')->toArray()
         ));
@@ -272,5 +282,22 @@ class Advert extends Model
     public function photos()
     {
         return $this->hasMany(Photo::class, 'advert_id', 'id');
+    }
+
+    /**
+     * Получить первое фото
+     *
+     * @return string|null
+     * @author Виталий Москвин <foreach@mail.ru>
+     */
+    public function firstPhoto(): ?string
+    {
+        $photo = $this->photos()->first();
+
+        if ($photo) {
+            return $photo->getUrl();
+        }
+
+        return null;
     }
 }

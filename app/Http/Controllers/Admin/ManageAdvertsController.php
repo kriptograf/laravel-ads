@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Cabinet\Advert\AttributesRequest;
 use App\Http\Requests\Cabinet\Advert\PhotoRequest;
+use App\Http\Requests\Cabinet\Advert\RejectRequest;
 use App\Models\Advert;
 use App\Services\Advert\AdvertService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
 class ManageAdvertsController extends Controller
@@ -16,6 +18,36 @@ class ManageAdvertsController extends Controller
     public function __construct(AdvertService $service)
     {
         $this->service = $service;
+    }
+
+    public function index(Request $request)
+    {
+        $query = Advert::orderByDesc('updated_at');
+
+        if (!empty($value = $request->get('id'))) {
+            $query->where('id', $value);
+        }
+
+        if (!empty($value = $request->get('title'))) {
+            $query->where('title', 'like', '%' . $value . '%');
+        }
+
+        if (!empty($value = $request->get('status'))) {
+            $query->where('status', $value);
+        }
+        $adverts = $query->paginate(20);
+
+        $statusList = Advert::statusList();
+
+        return view('admin.adverts.index', [
+            'adverts' => $adverts,
+            'statusList' => $statusList
+        ]);
+    }
+
+    public function show(Advert $advert)
+    {
+        return view('admin.adverts.show', ['advert' => $advert]);
     }
 
     /**
@@ -103,7 +135,7 @@ class ManageAdvertsController extends Controller
             return back()->with('error', $e->getMessage());
         }
 
-        return redirect()->route('advert.show', $advert)->with('success', __('Ads success published!'));
+        return redirect()->route('admin.adverts')->with('success', __('Ads success published!'));
     }
 
     /**
@@ -124,22 +156,33 @@ class ManageAdvertsController extends Controller
             return back()->with('error', $e->getMessage());
         }
 
-        return redirect()->route('advert.show', $advert)->with('success', __('Ads success unpublished!'));
+        return redirect()->route('admin.adverts', $advert)->with('success', __('Ads success unpublished!'));
     }
 
     public function edit()
     {
-        return view('cabinet.adverts.edit');
+        return view('admin.adverts.edit');
     }
 
     public function update()
     {
-        return redirect()->route('cabinet.advert');
+        return redirect()->route('admin.adverts');
     }
 
-    public function reject()
+    /**
+     * Отклонить объявление
+     *
+     * @param Advert        $advert
+     * @param RejectRequest $request
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     * @author Виталий Москвин <foreach@mail.ru>
+     */
+    public function reject(Advert $advert, RejectRequest $request)
     {
-        return redirect()->route('cabinet.advert');
+        $this->service->reject($advert->id, $request);
+
+        return redirect()->route('admin.adverts')->with('success', __('Advert reject success!'));
     }
 
     /**

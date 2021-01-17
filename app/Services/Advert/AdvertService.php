@@ -93,7 +93,7 @@ class AdvertService
         DB::transaction(function () use ($request, $advert) {
             foreach ($request['files'] as $file) {
                 $advert->photos()->create([
-                    'file' => $file->store('adverts'),
+                    'file' => $file->store('public'),
                 ]);
             }
         });

@@ -20,6 +20,9 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('ho
 
 Route::get('/ajax/regions', [\App\Http\Controllers\Ajax\RegionController::class, 'get'])->name('ajax.regions');
 
+/*
+ * Frontend routes
+ */
 Route::group([
     'prefix'     => 'advert',
     'as'         => 'adverts.',
@@ -59,6 +62,7 @@ Route::group([
     Route::post('/advert/update/{advert}', 'AdvertController@update')->name('advert.update');
     Route::get('/advert/show/{advert}', 'AdvertController@show')->name('advert.show');
     Route::get('/advert/photos/{advert}', 'ManageAdvertsController@photos')->name('advert.photos');
+    Route::post('/advert/photos/{advert}', 'ManageAdvertsController@updatePhotos')->name('advert.photos');
     Route::post('/advert/publish/{advert}', 'AdvertController@publish')->name('advert.publish');
     Route::post('/advert/close/{advert}', 'AdvertController@close')->name('advert.close');
     Route::delete('/advert/destroy/{advert}', 'ManageAdvertsController@destroy')->name('advert.destroy');
@@ -105,12 +109,14 @@ Route::group(
         Route::post('/attribute/update/{category}/{attribute}', [\App\Http\Controllers\Admin\AttributeController::class, 'update'])->name('attribute.update');
         Route::post('/attribute/destroy/{category}/{attribute}', [\App\Http\Controllers\Admin\AttributeController::class, 'destroy'])->name('attribute.destroy');
 
+        Route::get('/adverts', 'ManageAdvertsController@index')->name('advert.index');
+        Route::get('/advert/show/{advert}', 'ManageAdvertsController@show')->name('advert.show');
         Route::get('/advert/photos/{advert}', 'ManageAdvertsController@photos')->name('advert.photos');
         Route::post('/advert/publish/{advert}', 'ManageAdvertsController@publish')->name('advert.publish');
         Route::post('/advert/close/{advert}', 'ManageAdvertsController@close')->name('advert.close');
         Route::delete('/advert/destroy/{advert}', 'ManageAdvertsController@destroy')->name('advert.destroy');
         Route::get('/advert/edit/{advert}', 'ManageAdvertsController@edit')->name('advert.edit');
-        Route::get('/advert/reject/{advert}', 'ManageAdvertsController@reject')->name('advert.reject');
+        Route::post('/advert/reject/{advert}', 'ManageAdvertsController@reject')->name('advert.reject');
         Route::post('/advert/update/{advert}', 'ManageAdvertsController@update')->name('advert.update');
     }
 );

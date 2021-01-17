@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Фотографии объявления
@@ -22,5 +23,15 @@ class Photo extends Model
 
     public $timestamps = false;
 
-    protected $fillable = ['value'];
+    protected $fillable = ['file'];
+
+    /**
+     * Получить url фото
+     * @return string
+     * @author Виталий Москвин <foreach@mail.ru>
+     */
+    public function getUrl(): string
+    {
+        return Storage::url($this->file);
+    }
 }

@@ -67,6 +67,7 @@ class ManageAdvertsController extends Controller
     public function photos(Advert $advert)
     {
         $this->checkAccess($advert);
+
         return view('cabinet.adverts.edit.photos', ['advert' => $advert]);
     }
 
@@ -88,7 +89,7 @@ class ManageAdvertsController extends Controller
             return back()->with('error', $e->getMessage());
         }
 
-        return redirect()->route('adverts.show', $advert);
+        return redirect()->route('cabinet.advert.show', $advert);
     }
 
     /**

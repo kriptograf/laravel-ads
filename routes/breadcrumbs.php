@@ -186,6 +186,14 @@ Breadcrumbs::for('admin.attribute.show', function ($trail, \App\Models\Category 
     $trail->parent('admin.category.show', $category);
     $trail->push($attribute->name, route('admin.attribute.show', [$category, $attribute]));
 });
+Breadcrumbs::for('admin.advert.index', function ($trail) {
+    $trail->parent('admin.home');
+    $trail->push('Adverts list', route('admin.advert.index'));
+});
+Breadcrumbs::for('admin.advert.show', function ($trail, \App\Models\Advert $advert) {
+    $trail->parent('admin.advert.index');
+    $trail->push($advert->title, route('admin.advert.show', $advert));
+});
 
 /**
  * Личный кабинет пользователя
@@ -245,6 +253,14 @@ Breadcrumbs::for('cabinet.advert.create', function ($trail, \App\Models\Category
 });
 Breadcrumbs::for('cabinet.advert.show', function ($trail, \App\Models\Advert $advert) {
     $trail->push('Home', route('home'));
-    $trail->push('Title Here', route('cabinet.advert.show', $advert));
+    $trail->push($advert->title, route('cabinet.advert.show', $advert));
+});
+Breadcrumbs::for('cabinet.advert.edit', function ($trail, \App\Models\Advert $advert) {
+    $trail->parent('cabinet.advert.show', $advert);
+    $trail->push('Edit advert', route('cabinet.advert.edit', $advert));
+});
+Breadcrumbs::for('cabinet.advert.photos', function ($trail, \App\Models\Advert $advert) {
+    $trail->parent('cabinet.advert.show', $advert);
+    $trail->push('Add photos', route('cabinet.advert.photos', $advert));
 });
 

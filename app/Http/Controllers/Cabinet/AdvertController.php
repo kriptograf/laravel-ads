@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Cabinet;
 use App\Http\Controllers\Controller;
 use App\Http\Middleware\FilledProfile;
 use App\Http\Requests\Cabinet\Advert\CreateRequest;
+use App\Http\Requests\Cabinet\Advert\UpdateRequest;
 use App\Models\Advert;
 use App\Models\Category;
 use App\Models\Region;
@@ -128,7 +129,7 @@ class AdvertController extends Controller
     }
 
     /**
-     * Публикация объявления
+     * Публикация объявления и отправка на модерацию
      *
      * @param Advert $advert
      *
@@ -139,16 +140,24 @@ class AdvertController extends Controller
     public function publish(Advert $advert)
     {
         try{
-            $advert->published_at = Carbon::now();
-            $advert->status = Advert::STATUS_ACTIVE;
+            $advert->status = Advert::STATUS_MODERATION;
             $advert->saveOrFail();
         }catch(\DomainException $e){
             return back()->with('error', $e->getMessage());
         }
 
-        return redirect()->route('cabinet.advert.show', $advert)->with('success', __('Ads success published!'));
+        return redirect()->route('cabinet.advert.show', $advert)->with('success', __('Ads send to moderation!'));
     }
 
+    /**
+     * Закрыть объявление
+     *
+     * @param Advert $advert
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Throwable
+     * @author Виталий Москвин <foreach@mail.ru>
+     */
     public function close(Advert $advert)
     {
         try{
@@ -161,13 +170,44 @@ class AdvertController extends Controller
         return redirect()->route('cabinet.advert.show', $advert)->with('success', __('Ads success unpublished!'));
     }
 
-    public function edit()
+    /**
+     * Редактирование объявления? вывод формы
+     *
+     * @param Advert $advert
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     * @author Виталий Москвин <foreach@mail.ru>
+     */
+    public function edit(Advert $advert)
     {
-        return view('cabinet.adverts.edit');
+        $category = $advert->category;
+        $region = $advert->region;
+
+        return view('cabinet.adverts.edit', [
+            'advert' => $advert,
+            'category' => $category,
+            'region' => $region,
+        ]);
     }
 
-    public function update()
+    /**
+     * @todo Доработать редактирование объявления правильно
+     * @param UpdateRequest $request
+     * @param Advert        $advert
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     * @author Виталий Москвин <foreach@mail.ru>
+     */
+    public function update(UpdateRequest $request, Advert $advert)
     {
-        return redirect()->route('cabinet.advert');
+        $advert->update([
+            'title' => $request['title'],
+            'address' => $request['address'],
+            'content' => $request['content'],
+            'price' => $request['price'],
+            'status' => Advert::STATUS_DRAFT,
+        ]);
+
+        return redirect()->route('cabinet.advert')->with('success', __('Success updated advert!'));
     }
 }
