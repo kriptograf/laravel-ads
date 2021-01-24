@@ -22,10 +22,10 @@
                                     @foreach (array_chunk($categories, 3) as $chunk)
                                         <div class="col-md-3">
                                             <ul class="list-unstyled">
-                                                @foreach ($chunk as $current)
+                                                @foreach ($chunk as $currentCategory)
                                                     <li>
-                                                        <a href="{{ route('adverts.index', [$region, $current]) }}">{{ $current->name }}</a>
-                                                        ({{ $categoriesCounts[$current->id] ?? 0 }})
+                                                        <a href="{{ route('adverts.index', array_merge(['adverts_path' => adverts_path($region, $currentCategory)], request()->all())) }}">{{ $currentCategory->name }}</a>
+                                                        ({{ $categoriesCounts[$currentCategory->id] ?? 0 }})
                                                     </li>
                                                 @endforeach
                                             </ul>
@@ -50,10 +50,10 @@
                                     @foreach (array_chunk($regions, 3) as $chunk)
                                         <div class="col-md-3">
                                             <ul class="list-unstyled">
-                                                @foreach ($chunk as $current)
+                                                @foreach ($chunk as $currentRegion)
                                                     <li>
-                                                        <a href="{{ route('adverts.index', [$current, $category]) }}">{{ $current->name }}</a>
-                                                        ({{ $regionsCounts[$current->id] ?? 0 }})
+                                                        <a href="{{ route('adverts.index', array_merge(['adverts_path' => adverts_path($currentRegion, $category)], request()->all())) }}">{{ $currentRegion->name }}</a>
+                                                        ({{ $regionsCounts[$currentRegion->id] ?? 0 }})
                                                     </li>
                                                 @endforeach
                                             </ul>

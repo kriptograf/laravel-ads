@@ -28,6 +28,11 @@ class Region extends Model
      */
     protected $fillable = ['parent_id', 'name', 'slug'];
 
+    public function getPath()
+    {
+        return ($this->parent ? $this->parent->getPath() . '/' : '') . $this->slug;
+    }
+
     /**
      * Получаем склеенный адрес для подстановки
      * Адрес склеиваем рекурсивно от дочернего к родительскому
