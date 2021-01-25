@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Advert;
 use App\Models\Category;
 use App\Models\Region;
+use App\Router\AdvertPath;
 use Illuminate\Support\Facades\Gate;
 
 /**
@@ -17,21 +18,20 @@ class AdvertsController extends Controller
     /**
      * Список объявлений
      *
-     * @param Region|null   $region
-     * @param Category|null $category
+     * @param AdvertPath   $path
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      * @author Виталий Москвин <foreach@mail.ru>
      */
-    public function index(Region $region = null, Category $category = null)
+    public function index(AdvertPath $path)
     {
         $query = Advert::active()->with(['category', 'region'])->orderByDesc('published_at');
 
-        if ($category) {
+        if ($category = $path->category) {
             $query->forCategory($category);
         }
 
-        if ($region) {
+        if ($region = $path->region) {
             $query->forRegion($region);
         }
 

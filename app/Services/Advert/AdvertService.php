@@ -97,6 +97,9 @@ class AdvertService
                 ]);
             }
         });
+
+        // -- Обновим дату объявления
+        $advert->update();
     }
 
     /**
@@ -190,6 +193,9 @@ class AdvertService
                 }
             }
         });
+
+        // -- Обновим дату объявления
+        $advert->update();
     }
 
     /**

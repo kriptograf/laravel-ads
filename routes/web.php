@@ -30,8 +30,9 @@ Route::group([
     Route::get('/show/{advert}', [App\Http\Controllers\AdvertsController::class, 'show'])->name('show');
     Route::post('/phone/{advert}', [App\Http\Controllers\AdvertsController::class, 'phone'])->name('phone');
 
-    Route::get('/all/{category?}', [App\Http\Controllers\AdvertsController::class, 'index'])->name('index.all');
-    Route::get('/{region?}/{category?}', [App\Http\Controllers\AdvertsController::class, 'index'])->name('index');
+    //Route::get('/all/{category?}', [App\Http\Controllers\AdvertsController::class, 'index'])->name('index.all');
+    //Route::get('/{region?}/{category?}', [App\Http\Controllers\AdvertsController::class, 'index'])->name('index');
+    Route::get('/{adverts_path?}', [App\Http\Controllers\AdvertsController::class, 'index'])->name('index')->where('adverts_path', '.+');
 });
 
 /*
