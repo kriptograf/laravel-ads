@@ -2,10 +2,6 @@
 
 namespace App\Providers;
 
-use App\Services\Sms\DummySms;
-use App\Services\Sms\SmsRu;
-use App\Services\Sms\SmsSenderInterface;
-use Illuminate\Foundation\Application;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 

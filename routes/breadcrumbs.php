@@ -1,12 +1,16 @@
 <?php
 
+use App\Models\Admin\Permission;
 use App\Models\Advert;
+use App\Models\Attribute;
 use App\Models\Category;
+use App\Models\Profile;
 use App\Models\Region;
 use App\Router\AdvertPath;
 use DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator;
 use DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs;
 use App\Models\User;
+use Spatie\Permission\Models\Role;
 
 Breadcrumbs::register('home', function (BreadcrumbsGenerator $crumbs) {
 	$crumbs->push('Home', route('home'));
@@ -61,7 +65,7 @@ Breadcrumbs::for('adverts.index', function ($trail, AdvertPath $path = null) {
     $trail->parent('adverts.inner_category', $path, $path);
 });
 Breadcrumbs::for('adverts.show', function ($trail, Advert $advert) {
-    $trail->parent('adverts.index', $advert->region, $advert->category);
+    $trail->parent('adverts.index', adverts_path($advert->region, $advert->category));
     $trail->push($advert->title, route('adverts.show', $advert));
 });
 
@@ -99,11 +103,11 @@ Breadcrumbs::for('admin.role.create', function ($trail) {
     $trail->parent('admin.role.index');
     $trail->push('Create role', route('admin.role.create'));
 });
-Breadcrumbs::for('admin.role.show', function ($trail, \Spatie\Permission\Models\Role $role) {
+Breadcrumbs::for('admin.role.show', function ($trail, Role $role) {
     $trail->parent('admin.role.index');
     $trail->push('Show role', route('admin.role.show', $role));
 });
-Breadcrumbs::for('admin.role.edit', function ($trail, \Spatie\Permission\Models\Role $role) {
+Breadcrumbs::for('admin.role.edit', function ($trail, Role $role) {
     $trail->parent('admin.role.index');
     $trail->push('Edit role', route('admin.role.edit', $role));
 });
@@ -117,11 +121,11 @@ Breadcrumbs::for('admin.permission.create', function ($trail) {
     $trail->parent('admin.permission.index');
     $trail->push('Create permission', route('admin.permission.create'));
 });
-Breadcrumbs::for('admin.permission.show', function ($trail, \App\Models\Admin\Permission $permission) {
+Breadcrumbs::for('admin.permission.show', function ($trail, Permission $permission) {
     $trail->parent('admin.permission.index');
     $trail->push('Show permission', route('admin.permission.show', $permission));
 });
-Breadcrumbs::for('admin.permission.edit', function ($trail, \App\Models\Admin\Permission $permission) {
+Breadcrumbs::for('admin.permission.edit', function ($trail, Permission $permission) {
     $trail->parent('admin.permission.index');
     $trail->push('Edit permission', route('admin.permission.edit', $permission));
 });
@@ -175,12 +179,12 @@ Breadcrumbs::for('admin.attribute.create', function ($trail, Category $category)
     $trail->parent('admin.category.index');
     $trail->push('Title Here', route('admin.attribute.create', $category));
 });
-Breadcrumbs::for('admin.attribute.edit', function ($trail, Category $category, \App\Models\Attribute $attribute) {
+Breadcrumbs::for('admin.attribute.edit', function ($trail, Category $category, Attribute $attribute) {
     $trail->parent('admin.home');
     $trail->parent('admin.category.show', $category);
     $trail->push('Edit attribute ' . $attribute->name, route('admin.attribute.edit', [$category, $attribute]));
 });
-Breadcrumbs::for('admin.attribute.show', function ($trail, Category $category, \App\Models\Attribute $attribute) {
+Breadcrumbs::for('admin.attribute.show', function ($trail, Category $category, Attribute $attribute) {
     $trail->parent('admin.home');
     $trail->parent('admin.category.show', $category);
     $trail->push($attribute->name, route('admin.attribute.show', [$category, $attribute]));
@@ -195,7 +199,7 @@ Breadcrumbs::for('admin.advert.show', function ($trail, Advert $advert) {
 });
 
 /**
- * Личный кабинет пользователя
+ * ************ Личный кабинет пользователя ********************
  */
 Breadcrumbs::for('cabinet.home', function ($trail) {
     $trail->push('Home', route('home'));
@@ -205,15 +209,15 @@ Breadcrumbs::for('cabinet.profile', function ($trail) {
     $trail->push('Home', route('home'));
     $trail->push('Profile', route('cabinet.profile'));
 });
-Breadcrumbs::for('cabinet.profile.edit', function ($trail, \App\Models\Profile $profile) {
+Breadcrumbs::for('cabinet.profile.edit', function ($trail, Profile $profile) {
     $trail->push('Home', route('home'));
     $trail->push('Edit profile', route('cabinet.profile.edit', $profile));
 });
-Breadcrumbs::for('cabinet.profile.show', function ($trail, \App\Models\Profile $profile) {
+Breadcrumbs::for('cabinet.profile.show', function ($trail, Profile $profile) {
     $trail->push('Home', route('home'));
     $trail->push($profile->getFullName(), route('cabinet.profile.show', $profile));
 });
-Breadcrumbs::for('cabinet.profile.destroy', function ($trail, \App\Models\Profile $profile) {
+Breadcrumbs::for('cabinet.profile.destroy', function ($trail, Profile $profile) {
     $trail->push('Home', route('home'));
     $trail->push($profile->getFullName(), route('cabinet.profile.destroy', $profile));
 });

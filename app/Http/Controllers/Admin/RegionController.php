@@ -62,7 +62,7 @@ class RegionController extends Controller
 
         //return redirect()->route('admin.region.index')->with('success', __('Successful created region!'));
 
-        return redirect()->route('admin.region.show', $region);
+        return redirect()->route('admin.region.show', $region)->with('success', __('Successful created region!'));
     }
 
     /**
