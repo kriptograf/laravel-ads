@@ -34,28 +34,6 @@ class UpdateRequest extends FormRequest
     {
         $items = [];
 
-        // -- Добавляем валидацию динамических атрибутов объявления
-        /*foreach ($this->category->getAllAttributes() as $attribute) {
-            $rules = [
-                $attribute->required ? 'required' : 'nullable',
-            ];
-            if ($attribute->isInteger()) {
-                $rules[] = 'integer';
-            } elseif ($attribute->isFloat()) {
-                $rules[] = 'numeric';
-            } else {
-                $rules[] = 'string';
-                $rules[] = 'max:255';
-            }
-
-            if ($attribute->isSelect()) {
-                $rules[] = Rule::in($attribute->variants);
-            }
-
-            $items['attributes.' . $attribute->id] = $rules;
-
-        }*/
-
         return array_merge([
             'title'   => 'required|string',
             'content' => 'required|string',

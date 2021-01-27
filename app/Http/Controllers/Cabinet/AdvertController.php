@@ -191,7 +191,8 @@ class AdvertController extends Controller
     }
 
     /**
-     * @todo Доработать редактирование объявления правильно
+     * Редактирование объявления
+     *
      * @param UpdateRequest $request
      * @param Advert        $advert
      *
@@ -200,13 +201,7 @@ class AdvertController extends Controller
      */
     public function update(UpdateRequest $request, Advert $advert)
     {
-        $advert->update([
-            'title' => $request['title'],
-            'address' => $request['address'],
-            'content' => $request['content'],
-            'price' => $request['price'],
-            'status' => Advert::STATUS_DRAFT,
-        ]);
+        $this->service->edit($advert->id, $request);
 
         return redirect()->route('cabinet.advert')->with('success', __('Success updated advert!'));
     }

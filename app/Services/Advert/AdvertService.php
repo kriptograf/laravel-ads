@@ -8,6 +8,7 @@ use App\Http\Requests\Cabinet\Advert\AttributesRequest;
 use App\Http\Requests\Cabinet\Advert\CreateRequest;
 use App\Http\Requests\Cabinet\Advert\PhotoRequest;
 use App\Http\Requests\Cabinet\Advert\RejectRequest;
+use App\Http\Requests\Cabinet\Advert\UpdateRequest;
 use App\Models\Advert;
 use App\Models\Category;
 use App\Models\Region;
@@ -100,6 +101,28 @@ class AdvertService
 
         // -- Обновим дату объявления
         $advert->update();
+    }
+
+    /**
+     * @param integer       $id
+     * @param UpdateRequest $request
+     *
+     * @author Виталий Москвин <foreach@mail.ru>
+     */
+    public function edit($id, UpdateRequest $request): void
+    {
+        $advert = $this->getAdvert($id);
+        $oldPrice = $advert->price;
+        $advert->update($request->only([
+            'title',
+            'content',
+            'price',
+            'address',
+        ]));
+
+        if ($advert->price !== $oldPrice) {
+           // @todo отправим уведомления юзерам об изменении цены
+        }
     }
 
     /**

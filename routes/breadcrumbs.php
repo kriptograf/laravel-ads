@@ -267,3 +267,9 @@ Breadcrumbs::for('cabinet.advert.photos', function ($trail, Advert $advert) {
     $trail->push('Add photos', route('cabinet.advert.photos', $advert));
 });
 
+// -- Избранное
+Breadcrumbs::for('cabinet.favorites', function ($trail) {
+    $trail->push('Home', route('home'));
+    $trail->push('Favorites', route('cabinet.favorites'));
+});
+

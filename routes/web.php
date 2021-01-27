@@ -20,6 +20,9 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('ho
 
 Route::get('/ajax/regions', [\App\Http\Controllers\Ajax\RegionController::class, 'get'])->name('ajax.regions');
 
+Route::post('/favorite/add/{advert}', [App\Http\Controllers\FavoriteController::class, 'add'])->name('favorites.add');
+Route::delete('/favorite/delete/{advert}', [App\Http\Controllers\FavoriteController::class, 'remove'])->name('favorites.remove');
+
 /*
  * Frontend routes
  */
@@ -69,6 +72,9 @@ Route::group([
     Route::get('/advert/region/{category}/{region?}', 'AdvertController@region')->name('advert.region');
     Route::get('/advert/create/{category}/{region?}', 'AdvertController@create')->name('advert.create');
     Route::post('/advert/store/{category}/{region}', 'AdvertController@store')->name('advert.store');
+
+    Route::get('/favorites', 'FavoriteController@index')->name('favorites');
+    Route::delete('/favorites/remove/{advert}', 'FavoriteController@remove')->name('favorites.remove');
 });
 
 /*

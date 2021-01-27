@@ -6,6 +6,7 @@ use App\Models\Advert;
 use App\Models\Category;
 use App\Models\Region;
 use App\Router\AdvertPath;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
 /**
@@ -72,7 +73,13 @@ class AdvertsController extends Controller
 
         $similarAdverts = $query->limit(10)->get();
 
-        return view('adverts.show', ['advert' => $advert, 'similarAdverts' => $similarAdverts]);
+        $user = Auth::user();
+
+        return view('adverts.show', [
+            'advert' => $advert,
+            'similarAdverts' => $similarAdverts,
+            'user' => $user,
+        ]);
     }
 
     /**

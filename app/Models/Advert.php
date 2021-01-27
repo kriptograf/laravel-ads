@@ -33,6 +33,7 @@ use Illuminate\Database\Eloquent\Model;
  * @method Builder forCategory(Category $category)
  * @method Builder forRegion(Region $region)
  * @method Builder active()
+ * @method Advert findOrFail(int $id)
  *
  * @author Виталий Москвин <foreach@mail.ru>
  */
@@ -187,6 +188,29 @@ class Advert extends Model
         }
 
         return null;
+    }
+
+    /**
+     * Проверка, что объявление у пользователя в избранном
+     *
+     * @param integer $id Идентификатор пользователя
+     *
+     * @return bool
+     * @author Виталий Москвин <foreach@mail.ru>
+     */
+    public function hasInFavorites($id): bool
+    {
+        return $this->favorites()->where('id', $id)->exists();
+    }
+
+    /**
+     * Избранное
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @author Виталий Москвин <foreach@mail.ru>
+     */
+    public function favorites()
+    {
+        return $this->belongsToMany(User::class, 'favorites', 'advert_id', 'user_id');
     }
 
     /**

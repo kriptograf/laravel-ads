@@ -8,7 +8,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\Notifiable;
 use Carbon\Carbon;
-use Spatie\Permission\Traits\HasPermissions;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
@@ -28,6 +27,8 @@ use Spatie\Permission\Traits\HasRoles;
  * @property Carbon  $phone_verify_token_expire
  *
  * @property Profile $profile
+ *
+ * @method User findOrFail(int $id)
  *
  * @package App\Models
  * @author  Виталий Москвин <foreach@mail.ru>
@@ -235,6 +236,47 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Проверка , что объявление находится в избранном
+     *
+     * @param integer $id
+     *
+     * @return bool
+     * @author Виталий Москвин <foreach@mail.ru>
+     */
+    public function hasInFavorites($id): bool
+    {
+        return $this->favorites()->where('id', $id)->exists();
+    }
+
+    /**
+     * Добавить объявление в избранное
+     *
+     * @param integer $advertId
+     *
+     * @author Виталий Москвин <foreach@mail.ru>
+     */
+    public function addToFavorites($advertId)
+    {
+        if ($this->hasInFavorites($advertId)) {
+            throw new \DomainException('This advert is already added to favorite');
+        }
+
+        $this->favorites()->attach($advertId);
+    }
+
+    /**
+     * Удалить объявление из избранного
+     *
+     * @param integer $advertId
+     *
+     * @author Виталий Москвин <foreach@mail.ru>
+     */
+    public function removeFromFavorites($advertId)
+    {
+        $this->favorites()->detach($advertId);
+    }
+
+    /**
      * Связь с таблицей профиля
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
@@ -243,5 +285,16 @@ class User extends Authenticatable implements MustVerifyEmail
     public function profile()
     {
         return $this->hasOne(Profile::class, 'user_id', 'id');
+    }
+
+    /**
+     * Связь с избранными объявлениями
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @author Виталий Москвин <foreach@mail.ru>
+     */
+    public function favorites()
+    {
+        return $this->belongsToMany(Advert::class, 'favorites', 'user_id', 'advert_id');
     }
 }

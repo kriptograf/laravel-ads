@@ -15,6 +15,11 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="{{ route('cabinet.favorites') }}" class="nav-link">
+                                {{ __('Favorites') }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="{{ route('cabinet.profile') }}" class="nav-link">
                                 {{ __('Profile') }}
                             </a>
