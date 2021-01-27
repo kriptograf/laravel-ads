@@ -31,6 +31,11 @@ class Category extends Model
      */
     protected $fillable = ['parent_id', 'name', 'slug'];
 
+    public function getPath()
+    {
+        return implode('/', array_merge($this->ancestors()->defaultOrder()->pluck('slug')->toArray(), [$this->slug]));
+    }
+
     /**
      * Связь с атрибутами категории
      *
@@ -56,7 +61,8 @@ class Category extends Model
     /**
      * Все атрибуты категории включая родительские
      *
-     * @return array
+     * @return \App\Models\Attribute[]
+     *
      * @author Виталий Москвин <foreach@mail.ru>
      */
     public function getAllAttributes()

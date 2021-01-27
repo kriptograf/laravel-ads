@@ -49730,6 +49730,14 @@ module.exports = function(module) {
  */
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
+$(document).on('click', '.phone-button', function () {
+  var button = $(this);
+  axios.post(button.data('source')).then(function (response) {
+    button.find('.number').html(response.data);
+  })["catch"](function (reason) {
+    console.log(reason);
+  });
+});
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 /**
  * The following block of code may be used to automatically register your
@@ -49886,8 +49894,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /var/www/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /var/www/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /home/foreach/Projects/advert.loc/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/foreach/Projects/advert.loc/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string  $name
  * @property string  $type
  * @property boolean $required
- * @property jsonb   $variants
+ * @property array   $variants
  * @property integer $sort
  *
  * @author  Виталий Москвин <foreach@mail.ru>

@@ -25,6 +25,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+        // -- Запускаем зкрытие истекших объявлений каждый час
+        $schedule->command('advert:expire')->hourly();
     }
 
     /**

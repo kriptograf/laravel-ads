@@ -11,6 +11,9 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+    <script src="https://use.fontawesome.com/59a10b2a62.js"></script>
+    {{--<script src="https://kit.fontawesome.com/4ac4bd2132.js" crossorigin="anonymous"></script>--}}
 </head>
 <body>
     <div id="app">

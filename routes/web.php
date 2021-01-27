@@ -20,6 +20,22 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('ho
 
 Route::get('/ajax/regions', [\App\Http\Controllers\Ajax\RegionController::class, 'get'])->name('ajax.regions');
 
+Route::post('/favorite/add/{advert}', [App\Http\Controllers\FavoriteController::class, 'add'])->name('favorites.add');
+Route::delete('/favorite/delete/{advert}', [App\Http\Controllers\FavoriteController::class, 'remove'])->name('favorites.remove');
+
+/*
+ * Frontend routes
+ */
+Route::group([
+    'prefix'     => 'advert',
+    'as'         => 'adverts.',
+], function () {
+    Route::get('/show/{advert}', [App\Http\Controllers\AdvertsController::class, 'show'])->name('show');
+    Route::post('/phone/{advert}', [App\Http\Controllers\AdvertsController::class, 'phone'])->name('phone');
+
+    Route::get('/{adverts_path?}', [App\Http\Controllers\AdvertsController::class, 'index'])->name('index')->where('adverts_path', '.+');
+});
+
 /*
  * Cabinet routes
  */
@@ -47,10 +63,18 @@ Route::group([
     Route::get('/advert/edit/{advert}', 'AdvertController@edit')->name('advert.edit');
     Route::post('/advert/update/{advert}', 'AdvertController@update')->name('advert.update');
     Route::get('/advert/show/{advert}', 'AdvertController@show')->name('advert.show');
-    Route::get('/advert/destroy/{advert}', 'AdvertController@destroy')->name('advert.destroy');
+    Route::get('/advert/photos/{advert}', 'ManageAdvertsController@photos')->name('advert.photos');
+    Route::post('/advert/photos/{advert}', 'ManageAdvertsController@updatePhotos')->name('advert.photos');
+    Route::post('/advert/publish/{advert}', 'AdvertController@publish')->name('advert.publish');
+    Route::post('/advert/close/{advert}', 'AdvertController@close')->name('advert.close');
+    Route::delete('/advert/destroy/{advert}', 'ManageAdvertsController@destroy')->name('advert.destroy');
     Route::get('/advert/category', 'AdvertController@category')->name('advert.category');
     Route::get('/advert/region/{category}/{region?}', 'AdvertController@region')->name('advert.region');
     Route::get('/advert/create/{category}/{region?}', 'AdvertController@create')->name('advert.create');
+    Route::post('/advert/store/{category}/{region}', 'AdvertController@store')->name('advert.store');
+
+    Route::get('/favorites', 'FavoriteController@index')->name('favorites');
+    Route::delete('/favorites/remove/{advert}', 'FavoriteController@remove')->name('favorites.remove');
 });
 
 /*
@@ -89,5 +113,15 @@ Route::group(
         Route::get('/attribute/edit/{category}/{attribute}', [\App\Http\Controllers\Admin\AttributeController::class, 'edit'])->name('attribute.edit');
         Route::post('/attribute/update/{category}/{attribute}', [\App\Http\Controllers\Admin\AttributeController::class, 'update'])->name('attribute.update');
         Route::post('/attribute/destroy/{category}/{attribute}', [\App\Http\Controllers\Admin\AttributeController::class, 'destroy'])->name('attribute.destroy');
+
+        Route::get('/adverts', 'ManageAdvertsController@index')->name('advert.index');
+        Route::get('/advert/show/{advert}', 'ManageAdvertsController@show')->name('advert.show');
+        Route::get('/advert/photos/{advert}', 'ManageAdvertsController@photos')->name('advert.photos');
+        Route::post('/advert/publish/{advert}', 'ManageAdvertsController@publish')->name('advert.publish');
+        Route::post('/advert/close/{advert}', 'ManageAdvertsController@close')->name('advert.close');
+        Route::delete('/advert/destroy/{advert}', 'ManageAdvertsController@destroy')->name('advert.destroy');
+        Route::get('/advert/edit/{advert}', 'ManageAdvertsController@edit')->name('advert.edit');
+        Route::post('/advert/reject/{advert}', 'ManageAdvertsController@reject')->name('advert.reject');
+        Route::post('/advert/update/{advert}', 'ManageAdvertsController@update')->name('advert.update');
     }
 );

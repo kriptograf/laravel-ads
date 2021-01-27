@@ -8,25 +8,28 @@
                 <div class="card-body">
                     @if($region)
                         <p>
-                            <a href="{{ route('cabinet.advert.create', [$category, $region]) }}">
-                                Add Advert for {{ $region->name }}
+                            <a class="btn btn-success" href="{{ route('cabinet.advert.create', [$category, $region]) }}">
+                                {{ __('Add Advert for') }} {{ $region->name }}
                             </a>
                         </p>
                     @else
                         <p>
-                            <a href="{{ route('cabinet.advert.create', [$category]) }}">
-                                Add Advert for all regions
+                            <a class="btn btn-success" href="{{ route('cabinet.advert.create', [$category]) }}">
+                                {{ __('Add Advert for all regions') }}
                             </a>
                         </p>
                     @endif
-                    <h3>{{ __('Select region') }}</h3>
-                    <ul>
-                        @foreach($regions as $current)
-                            <li>
-                                <a href="{{ route('cabinet.advert.region', [$category, $current]) }}">{{ $current->name }}</a>
-                            </li>
-                        @endforeach
-                    </ul>
+
+                    @if(count($regions))
+                        <h3>{{ __('or select nested region') }}</h3>
+                        <ul>
+                            @foreach($regions as $current)
+                                <li>
+                                    <a href="{{ route('cabinet.advert.region', [$category, $current]) }}">{{ $current->name }}</a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    @endif
                 </div>
             </div>
         </div>

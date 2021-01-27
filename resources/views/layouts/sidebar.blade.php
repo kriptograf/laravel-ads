@@ -17,8 +17,6 @@
 
         @include('layouts.partials.nav')
 
-
-
         <main class="py-4">
             <div class="container">
                 {{ Breadcrumbs::view('breadcrumbs::bootstrap4') }}

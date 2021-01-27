@@ -10,6 +10,7 @@ class Role extends BaseRole
     use HasFactory;
 
     const ROLE_USER = 'user';
+    const ROLE_MODERATOR = 'moderator';
     const ROLE_ADMIN = 'admin';
 
     /**
@@ -23,6 +24,7 @@ class Role extends BaseRole
     {
         return [
             static::ROLE_USER,
+            static::ROLE_MODERATOR,
             static::ROLE_ADMIN,
         ];
     }
