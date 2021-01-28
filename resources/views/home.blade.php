@@ -6,7 +6,6 @@
         <div class="card">
             <div class="card-header">
                 {{ __('Home') }}
-                <a href="" class="btn btn-info float-right">{{ __('Create ads') }}</a>
             </div>
 
             <div class="card-body">

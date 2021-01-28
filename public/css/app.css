@@ -10907,3 +10907,14 @@ a.text-dark:focus {
   width: 50%;
 }
 
+.breadcrumb {
+  padding: 0;
+  background-color: transparent;
+  border-radius: 0;
+}
+
+.search-wrap {
+  background: #edf0ef;
+  padding-top: 15px;
+}
+
