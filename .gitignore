@@ -14,3 +14,4 @@ yarn-error.log
 /.idea
 .idea
 Makefile
+/storage/docker/
