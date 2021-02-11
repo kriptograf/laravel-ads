@@ -20,6 +20,8 @@ services:
             - .:/var/www/html
         depends_on:
             - db
+        links:
+            - elasticsearch
     composer:
         image: composer
         volumes:
@@ -49,10 +51,31 @@ services:
     redis:
         image: redis
         ports:
-          - "63791:6379"
+            - 63791:6379
     node:
         image: node:latest
         volumes:
-        - ./:/var/www
+            - ./:/var/www
         working_dir: /var/www
         tty: true
+    elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+        environment:
+            - xpack.ml.enabled=false
+            - cluster.name=docker-cluster
+            - bootstrap.memory_lock=true
+            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+            - discovery.zen.minimum_master_nodes=1
+            - discovery.type=single-node
+            - action.auto_create_index=.security*,.monitoring.*,.watches,.triggered_watches,.watcher-history*,.ml*
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+            nofile:
+                soft: 65536
+                hard: 65536
+        volumes:
+            - ./storage/docker/elasticsearch:/usr/share/elasticsearch/data
+        ports:
+            - 9201:9200

@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Adverts\SearchRequest;
 use App\Models\Advert;
 use App\Models\Category;
 use App\Models\Region;
 use App\Router\AdvertPath;
+use App\Services\Advert\SearchService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 
@@ -16,38 +18,55 @@ use Illuminate\Support\Facades\Gate;
  */
 class AdvertsController extends Controller
 {
+    private $search;
+
+    public function __construct(SearchService $search)
+    {
+        $this->search = $search;
+    }
+
     /**
      * Список объявлений
      *
-     * @param AdvertPath   $path
+     * @param SearchRequest $request
+     * @param AdvertPath    $path
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      * @author Виталий Москвин <foreach@mail.ru>
      */
-    public function index(AdvertPath $path)
+    public function index(SearchRequest $request, AdvertPath $path)
     {
-        $query = Advert::active()->with(['category', 'region'])->orderByDesc('published_at');
-
-        if ($category = $path->category) {
-            $query->forCategory($category);
-        }
-
-        if ($region = $path->region) {
-            $query->forRegion($region);
-        }
-
-        $adverts = $query->paginate(20);
+        $region = $path->region;
+        $category = $path->category;
 
         $regions = $region ? $region->children()->orderBy('name')->getModels() : Region::roots()->orderBy('name')->getModels();
 
         $categories = $category ? $category->children()->defaultOrder()->getModels() : Category::whereIsRoot()->defaultOrder()->getModels();
 
+        // -- Получаем объявления
+        $result = $this->search->search($category, $region, $request, 20, $request->get('page', 1));
+
+        $regionsCounts = $result->regionsCounts;
+        $categoriesCounts = $result->categoriesCounts;
+
+        // -- Не выводим регионы и категории у которых нет объявлений
+        $regions = array_filter($regions, function (Region $region) use ($regionsCounts) {
+            return isset($regionsCounts[$region->id]) && $regionsCounts[$region->id] > 0;
+        });
+
+        $categories = array_filter($categories, function (Category $category) use ($categoriesCounts) {
+            return isset($categoriesCounts[$category->id]) && $categoriesCounts[$category->id] > 0;
+        });
+        // -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+
         return view('adverts.index', [
-            'category'   => $category,
-            'region'     => $region,
-            'regions'    => $regions,
-            'categories' => $categories,
-            'adverts'    => $adverts,
+            'category'         => $category,
+            'region'           => $region,
+            'regions'          => $regions,
+            'categories'       => $categories,
+            'adverts'          => $result->adverts,
+            'regionsCounts'    => $regionsCounts,
+            'categoriesCounts' => $categoriesCounts,
         ]);
     }
 

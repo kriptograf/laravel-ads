@@ -20,7 +20,9 @@
 
         @include('layouts.partials.nav')
         <div class="clearfix"></div>
-        @include('layouts.partials.search')
+        @section('search')
+            @include('layouts.partials.search', ['category' => null, 'action' => route('adverts.index', request()->all())])
+        @show
         <div class="clearfix"></div>
 
         <main class="py-4">

@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('search')
+    @include('layouts.partials.search', ['category' => $category, 'action' => '?'])
+@endsection
+
 @section('content')
     <div class="row justify-content-center">
         <div class="col-md-12">
