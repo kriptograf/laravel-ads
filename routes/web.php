@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,6 +19,8 @@ Auth::routes(['verify' => true]);
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::get('/ajax/regions', [\App\Http\Controllers\Ajax\RegionController::class, 'get'])->name('ajax.regions');
+Route::get('/banner/get', [\App\Http\Controllers\BannerController::class, 'get'])->name('banner.get');
+Route::get('/banner/click/{banner}', [\App\Http\Controllers\BannerController::class, 'click'])->name('banner.click');
 
 Route::post('/favorite/add/{advert}', [App\Http\Controllers\FavoriteController::class, 'add'])->name('favorites.add');
 Route::delete('/favorite/delete/{advert}', [App\Http\Controllers\FavoriteController::class, 'remove'])->name('favorites.remove');
@@ -75,6 +77,21 @@ Route::group([
 
     Route::get('/favorites', 'FavoriteController@index')->name('favorites');
     Route::delete('/favorites/remove/{advert}', 'FavoriteController@remove')->name('favorites.remove');
+
+    Route::get('/banners', 'BannerController@index')->name('banners');
+    Route::get('/banner/update/{banner}', 'BannerController@update')->name('banners.update');
+    Route::put('/banner/edit/{banner}', 'BannerController@edit')->name('banners.edit');
+    Route::get('/banner/show/{banner}', 'BannerController@show')->name('banners.show');
+    Route::post('/banner/send/{banner}', 'BannerController@send')->name('banners.send');
+    Route::post('/banner/cancel/{banner}', 'BannerController@cancel')->name('banners.cancel');
+    Route::post('/banner/order/{banner}', 'BannerController@order')->name('banners.order');
+//    Route::post('/advert/publish/{advert}', 'AdvertController@publish')->name('advert.publish');
+//    Route::post('/advert/close/{advert}', 'AdvertController@close')->name('advert.close');
+    Route::delete('/banner/destroy/{banner}', 'BannerController@destroy')->name('banners.destroy');
+    Route::get('/banner/create', 'BannerController@category')->name('banners.create');
+    Route::get('/banner/region/{category}/{region?}', 'BannerController@region')->name('banners.region');
+    Route::get('/banner/banner/{category}/{region?}', 'BannerController@banner')->name('banners.banner');
+    Route::post('/banner/banner/{category}/{region}', 'BannerController@store')->name('banners.store');
 });
 
 /*
@@ -123,5 +140,21 @@ Route::group(
         Route::get('/advert/edit/{advert}', 'ManageAdvertsController@edit')->name('advert.edit');
         Route::post('/advert/reject/{advert}', 'ManageAdvertsController@reject')->name('advert.reject');
         Route::post('/advert/update/{advert}', 'ManageAdvertsController@update')->name('advert.update');
+
+        Route::get('/banners', 'BannerController@index')->name('banner.index');
+        Route::get('/banner/update/{banner}', 'BannerController@update')->name('banners.update');
+        Route::put('/banner/edit/{banner}', 'BannerController@edit')->name('banners.edit');
+        Route::get('/banner/show/{banner}', 'BannerController@show')->name('banners.show');
+        Route::post('/banner/send/{banner}', 'BannerController@send')->name('banners.send');
+        Route::post('/banner/cancel/{banner}', 'BannerController@cancel')->name('banners.cancel');
+        Route::post('/banner/order/{banner}', 'BannerController@order')->name('banners.order');
+        Route::post('/banner/moderate/{banner}', 'BannerController@moderate')->name('banners.moderate');
+        Route::post('/banner/pay/{banner}', 'BannerController@pay')->name('banners.pay');
+//    Route::post('/advert/close/{advert}', 'AdvertController@close')->name('advert.close');
+        Route::delete('/banner/destroy/{banner}', 'BannerController@destroy')->name('banners.destroy');
+        Route::get('/banner/create', 'BannerController@category')->name('banners.create');
+        Route::get('/banner/region/{category}/{region?}', 'BannerController@region')->name('banners.region');
+        Route::get('/banner/banner/{category}/{region?}', 'BannerController@banner')->name('banners.banner');
+        Route::post('/banner/banner/{category}/{region}', 'BannerController@store')->name('banners.store');
     }
 );

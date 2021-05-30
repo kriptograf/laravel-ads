@@ -3,13 +3,14 @@
 use App\Models\Admin\Permission;
 use App\Models\Advert;
 use App\Models\Attribute;
+use App\Models\Banner;
 use App\Models\Category;
 use App\Models\Profile;
 use App\Models\Region;
+use App\Models\User;
 use App\Router\AdvertPath;
 use DaveJamesMiller\Breadcrumbs\BreadcrumbsGenerator;
 use DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs;
-use App\Models\User;
 use Spatie\Permission\Models\Role;
 
 Breadcrumbs::register('home', function (BreadcrumbsGenerator $crumbs) {
@@ -198,6 +199,24 @@ Breadcrumbs::for('admin.advert.show', function ($trail, Advert $advert) {
     $trail->push($advert->title, route('admin.advert.show', $advert));
 });
 
+// -- Баннеры
+Breadcrumbs::for('admin.banner.index', function ($trail) {
+    $trail->parent('admin.home');
+    $trail->push('Banners', route('admin.banner.index'));
+});
+Breadcrumbs::for('admin.banners.show', function ($trail, Banner $banner) {
+    $trail->parent('admin.banner.index');
+    $trail->push($banner->name, route('admin.banners.show', $banner));
+});
+Breadcrumbs::for('admin.banners.update', function ($trail, Banner $banner) {
+    $trail->parent('admin.banner.index');
+    $trail->push('Update Banner', route('admin.banners.update', $banner));
+});
+Breadcrumbs::for('admin.banners.create', function ($trail) {
+    $trail->parent('admin.banner.index');
+    $trail->push('Create Banner', route('admin.banners.create'));
+});
+
 /**
  * ************ Личный кабинет пользователя ********************
  */
@@ -272,4 +291,34 @@ Breadcrumbs::for('cabinet.favorites', function ($trail) {
     $trail->push('Home', route('home'));
     $trail->push('Favorites', route('cabinet.favorites'));
 });
+
+// -- Баннеры
+Breadcrumbs::for('cabinet.banners', function ($trail) {
+    $trail->push('Home', route('home'));
+    $trail->push('Banners', route('cabinet.banners'));
+});
+Breadcrumbs::for('cabinet.banners.create', function ($trail) {
+    $trail->parent('cabinet.banners');
+    $trail->push('Create Banner', route('cabinet.banners.create'));
+});
+Breadcrumbs::for('cabinet.banners.region', function ($trail, Category $category) {
+    $trail->parent('cabinet.banners.create');
+    $trail->push('Create Banner', route('cabinet.banners.region', $category));
+});
+Breadcrumbs::for('cabinet.banners.banner', function ($trail, Category $category, Region $region) {
+    $trail->parent('cabinet.banners.region', $category);
+    $trail->push('Create Banner', route('cabinet.banners.banner', [$category, $region]));
+});
+Breadcrumbs::for('cabinet.banners.show', function ($trail, Banner $banner) {
+    $trail->parent('cabinet.banners');
+    $trail->push($banner->name, route('cabinet.banners.show', $banner));
+});
+Breadcrumbs::for('cabinet.banners.update', function ($trail, Banner $banner) {
+    $trail->parent('cabinet.banners');
+    $trail->push('Edit Banner', route('cabinet.banners.update', $banner));
+});
+
+
+
+
 

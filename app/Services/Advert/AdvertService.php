@@ -13,6 +13,7 @@ use App\Models\Advert;
 use App\Models\Category;
 use App\Models\Region;
 use App\Models\User;
+use App\Services\Search\AdvertIndexer;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -23,6 +24,14 @@ use Illuminate\Support\Facades\DB;
  */
 class AdvertService
 {
+    /** @var AdvertIndexer */
+    private $indexer;
+
+    public function __construct(AdvertIndexer $indexer)
+    {
+        $this->indexer = $indexer;
+    }
+
     /**
      * Создание объявления
      *
@@ -154,6 +163,9 @@ class AdvertService
         }
 
         $advert->moderate(Carbon::now());
+
+        // -- Добавляем в индекс эластика объявление
+        $this->indexer->index($advert);
     }
 
     /**
@@ -172,6 +184,9 @@ class AdvertService
         }
 
         $advert->close();
+
+        // -- Удаляем из индекса истекшее объявление
+        $this->indexer->remove($advert);
     }
 
     /**
@@ -186,6 +201,9 @@ class AdvertService
     {
         $advert = $this->getAdvert($id);
         $advert->reject($request['reason']);
+
+        // -- Удаляем из индекса эластика объявление
+        $this->indexer->remove($advert);
     }
 
     /**
@@ -219,6 +237,9 @@ class AdvertService
 
         // -- Обновим дату объявления
         $advert->update();
+
+        $this->indexer->remove($advert);
+        $this->indexer->index($advert);
     }
 
     /**
@@ -233,6 +254,8 @@ class AdvertService
     {
         $advert = $this->getAdvert($id);
         $advert->delete();
+
+        $this->indexer->remove($advert);
     }
 
     /**

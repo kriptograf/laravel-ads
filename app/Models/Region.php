@@ -17,6 +17,8 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @method Builder roots()
  *
+ * @mixin Builder
+ *
  * @author  Виталий Москвин <foreach@mail.ru>
  */
 class Region extends Model

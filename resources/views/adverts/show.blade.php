@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('search')
+    @include('layouts.partials.search', ['category' => $advert->category, 'action' => '?'])
+@endsection
+
 @section('content')
     <div class="row justify-content-center">
         <div class="col-md-12">
@@ -185,8 +189,14 @@
 
                         </div>
                         <div class="col-md-3">
-                            <div style="height: 400px; background: #f6f6f6; border: 1px solid #ddd; margin-bottom: 20px"></div>
-                            <div style="height: 400px; background: #f6f6f6; border: 1px solid #ddd; margin-bottom: 20px"></div>
+                            <div
+                                class="banner"
+                                data-format="240x400"
+                                data-url="{{ route('banner.get') }}"
+                                data-category="{{ $advert->category ? $advert->category->id : '' }}"
+                                data-region="{{ $advert->region ? $advert->region->id : ''  }}">
+
+                            </div>
                         </div>
                     </div>
                 </div>

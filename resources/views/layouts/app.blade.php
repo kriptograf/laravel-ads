@@ -19,9 +19,15 @@
     <div id="app">
 
         @include('layouts.partials.nav')
+        <div class="clearfix"></div>
+        @section('search')
+            @include('layouts.partials.search', ['category' => null, 'action' => route('adverts.index', request()->all())])
+        @show
+        <div class="clearfix"></div>
 
         <main class="py-4">
             <div class="container">
+
                 {{ Breadcrumbs::view('breadcrumbs::bootstrap4') }}
                 @include('layouts.partials.flash')
                 @yield('content')
