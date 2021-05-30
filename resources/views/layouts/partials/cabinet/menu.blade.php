@@ -30,6 +30,11 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a href="{{ route('cabinet.banners') }}" class="nav-link">
+                                {{ __('Banners') }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="{{ route('admin.users.index') }}" class="nav-link">
                                 {{ __('Users') }}
                             </a>

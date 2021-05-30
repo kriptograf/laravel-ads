@@ -3,7 +3,9 @@
 namespace App\Console\Commands\Search;
 
 use App\Models\Advert;
+use App\Models\Banner;
 use App\Services\Search\AdvertIndexer;
+use App\Services\Search\BannerIndexer;
 use Illuminate\Console\Command;
 
 /**
@@ -28,20 +30,23 @@ class ReindexCommand extends Command
     protected $description = 'Reindex elasticsearch index';
 
     /** @var AdvertIndexer */
-    private $indexer;
+    private $advertIndexer;
+
+    /** @var BannerIndexer  */
+    private $bannerIndexer;
 
     /**
-     * Create a new command instance.
+     * ReindexCommand constructor.
      *
-     * @param AdvertIndexer $indexer
-     *
-     * @return void
+     * @param AdvertIndexer $advertIndexer
+     * @param BannerIndexer $bannerIndexer
      */
-    public function __construct(AdvertIndexer $indexer)
+    public function __construct(AdvertIndexer $advertIndexer, BannerIndexer $bannerIndexer)
     {
         parent::__construct();
 
-        $this->indexer = $indexer;
+        $this->advertIndexer = $advertIndexer;
+        $this->bannerIndexer = $bannerIndexer;
     }
 
     /**
@@ -51,11 +56,17 @@ class ReindexCommand extends Command
      */
     public function handle()
     {
-        $this->indexer->clear();
+        $this->advertIndexer->clear();
 
-        // -- Наполним индекс данными
+        // -- Наполним индекс объявлений данными
         foreach (Advert::active()->orderBy('id')->cursor() as $advert) {
-            $this->indexer->index($advert);
+            $this->advertIndexer->index($advert);
+        }
+
+        $this->bannerIndexer->clear();
+        // -- Наполним индекс банноров данными
+        foreach (Banner::active()->orderBy('id')->cursor() as $banner) {
+            $this->bannerIndexer->index($banner);
         }
 
         return true;

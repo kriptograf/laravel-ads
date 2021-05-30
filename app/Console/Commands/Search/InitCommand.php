@@ -49,6 +49,15 @@ class InitCommand extends Command
      */
     public function handle()
     {
+        $this->indexAdverts();
+
+        $this->indexBanners();
+
+        return true;
+    }
+
+    private function indexAdverts()
+    {
         try {
             // -- Удалим старый индекс
             $this->client->indices()->delete([
@@ -151,7 +160,44 @@ class InitCommand extends Command
                 ],
             ],
         ]);
+    }
 
-        return true;
+    private function indexBanners()
+    {
+        try {
+            // -- Удалим старый индекс
+            $this->client->indices()->delete([
+                'index' => 'banners',
+            ]);
+        } catch(Missing404Exception $e){}
+
+        // -- Создадим новый индекс
+        $this->client->indices()->create([
+            'index' => 'banners',
+            'body' => [
+                'mappings' => [
+                    '_source' => [
+                        'enabled' => true,
+                    ],
+                    'properties' => [
+                        'id' => [
+                            'type' => 'integer',
+                        ],
+                        'status' => [
+                            'type' => 'keyword',
+                        ],
+                        'format' => [
+                            'type' => 'keyword',
+                        ],
+                        'categories' => [
+                            'type' => 'integer',
+                        ],
+                        'regions' => [
+                            'type' => 'integer',
+                        ],
+                    ],
+                ],
+            ],
+        ]);
     }
 }

@@ -95,11 +95,13 @@
                                 {{ $adverts->links() }}
                             </div>
                             <div class="col-md-3">
-                                <div class="card-body pt-0">
-                                    <img src="https://via.placeholder.com/200x400.png" alt="">
-                                </div>
-                                <div class="card-body pb-0">
-                                    <img src="https://via.placeholder.com/200x300.png" alt="">
+                                <div
+                                    class="banner"
+                                    data-format="240x400"
+                                    data-url="{{ route('banner.get') }}"
+                                    data-category="{{ $category ? $category->id : '' }}"
+                                    data-region="{{ $region ? $region->id : ''  }}">
+
                                 </div>
                             </div>
                         </div>

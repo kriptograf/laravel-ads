@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Admin\Role;
 use App\Models\Advert;
+use App\Models\Banner;
 use App\Models\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
@@ -45,6 +46,11 @@ class AuthServiceProvider extends ServiceProvider
         // -- Проверка, что пользователь может редактировать свое объявление
         Gate::define('manage-own-advert', function (User $user, Advert $advert) {
             return $advert->user_id === $user->id;
+        });
+
+        // -- Проверка, что пользователь может редактировать свой баннер
+        Gate::define('manage-own-banner', function (User $user, Banner $banner) {
+            return $banner->user_id === $user->id;
         });
     }
 }
